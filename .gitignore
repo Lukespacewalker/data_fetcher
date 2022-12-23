@@ -1,2 +1,7 @@
 .venv
-output
+output/*
+dist
+build
+__pycache__
+icons/__pycache__
+modules/__pycache__
