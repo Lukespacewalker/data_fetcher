@@ -11,7 +11,7 @@ Interface ของโปรแกรมอาจแสดงผลไม่ถ�
 Python 3.11
 ### คำสั่ง
 1. `python -m venv .venv`
-2. `./venv/Script/Activate.ps1`
+2. `./.venv/Scripts/Activate.ps1`
 3. `pip install -r requirements.txt`
 4. `pip install pyinstaller`
 5. `pyinstaller app.spec`
