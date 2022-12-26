@@ -226,16 +226,16 @@ class Fetcher:
         else:
             output = self.main(
                 cc, start_date.addDays(-3).toString("yyyy-MM-dd"))
-        output = output[output["VisitDate"] >= pd.Timestamp(
-            start_date.toString("yyyy-MM-dd"))]
+        output = output[output["VisitDate"] >= 
+            start_date]
         out = self.template.copy()
         for col in output.columns:
             out[col] = output[col]
         column_to_move = out.pop("cc")
         out.insert(0, "cc", column_to_move)
         name = re.sub(r"[^\u0E00-\u0E7Fa-zA-Z' \.]", "_", cc)
-        end_date_string = "" if end_date is None else f"_{end_date.toString('yyyy-MM-dd')}"
-        fullname = f"output_{name}_{start_date}{end_date_string}.xlsx"
+        end_date_string = "" if end_date is None else f"{end_date.toString('yyyy-MM-dd')}"
+        fullname = f"output_{name}{start_date.toString('yyyy-MM-dd')}{end_date_string}.xlsx"
         out.sort_values(by="VisitNumber").to_excel(
             f"outputs/{fullname}")
         return fullname

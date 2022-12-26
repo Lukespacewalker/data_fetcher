@@ -1,5 +1,5 @@
 .venv
-output/*
+outputs/*
 dist
 build
 __pycache__

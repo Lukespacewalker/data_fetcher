@@ -52,15 +52,19 @@ class ConnectionWidget(QWidget):
             self.updateConfig()
             json.dump(config, f)
             global fetcher
+            template = fetcher.template
             fetcher = Fetcher(config["username"], config["password"],
                               config["mysqlAddress"], config["port"], config["database"])
+            fetcher.template = template
 
     def createSetConfigDelegate(self, prop_name):
         def delegate():
             self.updateConfig()
             global fetcher
+            template = fetcher.template
             fetcher = Fetcher(config["username"], config["password"],
                               config["mysqlAddress"], config["port"], config["database"])
+            fetcher.template = template
         return delegate
 
     def __init__(self):
@@ -138,16 +142,16 @@ class SearchWidget(QWidget):
         self.search.setCheckable(False)
         self.search.setText("กำลังทำงาน ...")
         QApplication.processEvents()
-        try:
-            if self.use_end_date.isChecked():
-                fname = fetcher.get_data(
-                    self.cc.text(), self.start_date.date(), self.end_date.date())
-            else:
-                fname = fetcher.get_data(
-                    self.cc.text(), self.start_date.date())
-            self.result.setText(f"เรียบร้อย {fname}")
-        except:
-            self.result.setText("เกิดข้อผิดพลาด")
+        #try:
+        if self.use_end_date.isChecked():
+            fname = fetcher.get_data(
+                self.cc.text(), self.start_date.date(), self.end_date.date())
+        else:
+            fname = fetcher.get_data(
+                self.cc.text(), self.start_date.date())
+        self.result.setText(f"เรียบร้อย {fname}")
+        #except:
+        #    self.result.setText("เกิดข้อผิดพลาด")
 
         self.search.setText("ค้นหา")
         self.search.setDisabled(False)
