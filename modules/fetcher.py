@@ -56,6 +56,7 @@ lab_dict = {
     566: "Lipid-TC",
     568: "Lipid-HDL",
     1135: "Lipid-LDL",
+    879: "Lipid-LDL",
     567: "Lipid-TG",
     538: "Kidney-BUN",
     539: "Kidney-Cr",
