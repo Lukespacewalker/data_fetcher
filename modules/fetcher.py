@@ -6,6 +6,7 @@ import numpy as np
 from functools import reduce
 from PySide6.QtCore import QDate
 
+from fhir.resources.patient import Patient
 
 def make_sorter(l):
     """
@@ -240,3 +241,29 @@ class Fetcher:
         out.sort_values(by="VisitNumber").to_excel(
             f"outputs/{fullname}")
         return fullname
+    
+    def main2(self, start_date: str, end_date: str | None = None):
+        if not self.has_gotten_key:
+            self.getkey()
+            self.has_gotten_key = True
+        end_date_query = f'AND OPD.vstdate <= "{end_date}"' if end_date is not None else ""
+        main_query = f'''
+            SELECT PT.pname,PT.fname,PT.lname,PT.sex,OPD.hn,PT.cid,PT.birthday,OPD.vn,OPD.vstdate,OPDILL.cc_persist_disease,OPD.smoking_type_id,OPD.drinking_type_id,OPD.bw,OPD.height,OPD.waist,OPD.bps,OPD.bpd,OPD.pulse,OPD.rr,XR.report_text,OPD.cc FROM opdscreen OPD
+                INNER JOIN patient PT ON PT.hn = OPD.hn
+                LEFT JOIN xray_report XR ON XR.vn = OPD.vn
+                LEFT JOIN opd_ill_history OPDILL ON OPDILL.hn = OPD.hn
+                WHERE OPD.vstdate >= "{start_date}" {end_date_query}
+        '''
+        main_df = self.call_database(main_query)
+        return main_df
+
+    def get_fhir_data(self, start_date: QDate, end_date: QDate | None = None):
+        # YYYY-MM-DDout = template.copy()
+        if end_date is not None:
+            output = self.main2(start_date.toString(
+                "yyyy-MM-dd"), end_date.toString("yyyy-MM-dd"))
+        else:
+            output = self.main2(start_date.toString("yyyy-MM-dd"))
+        output = output[output["VisitDate"] >= 
+            start_date]
+        

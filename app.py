@@ -157,6 +157,26 @@ class SearchWidget(QWidget):
         self.search.setDisabled(False)
         pass
 
+    def fetchFHIR(self):
+        global fetcher
+        self.result.setText("")
+        self.search.setDisabled(True)
+        self.search.setCheckable(False)
+        self.search.setText("กำลังทำงาน ...")
+        QApplication.processEvents()
+        #try:
+        if self.use_end_date.isChecked():
+            fname = fetcher.get_fhir_data(self.start_date.date(), self.end_date.date())
+        else:
+            fname = fetcher.get_fhir_data(self.start_date.date())
+        self.result.setText(f"เรียบร้อย {fname}")
+        #except:
+        #    self.result.setText("เกิดข้อผิดพลาด")
+
+        self.search.setText("ค้นหา")
+        self.search.setDisabled(False)
+        pass
+
     def change_template(self, index):
         global fetcher
         po = self.template.itemData(index)
@@ -234,6 +254,12 @@ class SearchWidget(QWidget):
         search.setDisabled(True)
         search.clicked.connect(self.fetch)
         layout.addWidget(search, 3, 0, 1, 3)
+
+        self.search2 = search2 = QPushButton()
+        search2.setText("FHIR")
+        search2.setDisabled(True)
+        search2.clicked.connect(self.fetchFHIR)
+        layout.addWidget(search2, 4, 0, 1, 3)
 
         self.result = result = QLabel()
         result.setText("")
